@@ -2,7 +2,7 @@
 # test_init.sh - Tests for init.sh
 # Run: bash skills/init/test_init.sh
 
-set -euo pipefail
+set -uo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 INIT_SCRIPT="$SCRIPT_DIR/init.sh"
@@ -154,6 +154,18 @@ setup_test_env
 rm -rf "$TEST_DIR/available/ja/smart-commit"
 output=$(echo "1" | bash "$INIT_SCRIPT" "$TEST_DIR" 2>&1) || true
 assert_contains "output contains warning" "no skills" "$output"
+
+# ============================================================
+echo "=== Test 7: optional/ skills are not copied ==="
+setup_test_env
+mkdir -p "$TEST_DIR/available/ja/optional/x-draft"
+echo "---" > "$TEST_DIR/available/ja/optional/x-draft/SKILL.md"
+echo "name: x-draft" >> "$TEST_DIR/available/ja/optional/x-draft/SKILL.md"
+echo "---" >> "$TEST_DIR/available/ja/optional/x-draft/SKILL.md"
+output=$(echo "1" | bash "$INIT_SCRIPT" "$TEST_DIR" 2>&1) || true
+assert_file_not_exists "optional/x-draft not copied to skills/" "$TEST_DIR/skills/x-draft/SKILL.md"
+assert_file_not_exists "optional dir not copied to skills/" "$TEST_DIR/skills/optional/SKILL.md"
+assert_file_exists "non-optional skill still copied" "$TEST_DIR/skills/smart-commit/SKILL.md"
 
 # ============================================================
 echo ""

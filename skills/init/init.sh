@@ -11,8 +11,8 @@ PLUGIN_ROOT="${1:-$(cd "$SCRIPT_DIR/../.." && pwd)}"
 SKILLS_DIR="$PLUGIN_ROOT/skills"
 AVAILABLE_DIR="$PLUGIN_ROOT/available"
 
-# Protected skills that should not be overwritten
-PROTECTED_SKILLS=("init" "translate")
+# Directories to skip during copy
+SKIP_DIRS=("optional")
 
 echo "Select language:"
 echo "1) ja - 日本語"
@@ -50,15 +50,10 @@ for skill_dir in "$lang_dir"/*/; do
 
   skill_name="$(basename "$skill_dir")"
 
-  # Skip optional directory
-  if [ "$skill_name" = "optional" ]; then
-    continue
-  fi
-
-  # Skip protected skills
+  # Skip directories in SKIP_DIRS
   skip=false
-  for protected in "${PROTECTED_SKILLS[@]}"; do
-    if [ "$skill_name" = "$protected" ]; then
+  for skip_dir in "${SKIP_DIRS[@]}"; do
+    if [ "$skill_name" = "$skip_dir" ]; then
       skip=true
       break
     fi

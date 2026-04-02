@@ -126,15 +126,16 @@ assert_contains "output mentions translate" "translate" "$output"
 assert_file_not_exists "no skills copied to skills/" "$TEST_DIR/skills/smart-commit/SKILL.md"
 
 # ============================================================
-echo "=== Test 4: Existing init/ and translate/ are not overwritten ==="
+echo "=== Test 4: init/ and translate/ are overwritten with language versions ==="
 setup_test_env
-init_before=$(cat "$TEST_DIR/skills/init/SKILL.md")
-translate_before=$(cat "$TEST_DIR/skills/translate/SKILL.md")
+mkdir -p "$TEST_DIR/available/ja/init" "$TEST_DIR/available/ja/translate"
+echo "init ja version" > "$TEST_DIR/available/ja/init/SKILL.md"
+echo "translate ja version" > "$TEST_DIR/available/ja/translate/SKILL.md"
 output=$(echo "1" | bash "$INIT_SCRIPT" "$TEST_DIR" 2>&1) || true
 init_after=$(cat "$TEST_DIR/skills/init/SKILL.md")
 translate_after=$(cat "$TEST_DIR/skills/translate/SKILL.md")
-assert_eq "init/SKILL.md unchanged" "$init_before" "$init_after"
-assert_eq "translate/SKILL.md unchanged" "$translate_before" "$translate_after"
+assert_eq "init/SKILL.md overwritten with ja version" "init ja version" "$init_after"
+assert_eq "translate/SKILL.md overwritten with ja version" "translate ja version" "$translate_after"
 
 # ============================================================
 echo "=== Test 5: Invalid input → error ==="

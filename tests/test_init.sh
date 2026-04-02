@@ -1,11 +1,12 @@
 #!/bin/bash
 # test_init.sh - Tests for init.sh
-# Run: bash skills/init/test_init.sh
+# Run: bash tests/test_init.sh
 
 set -uo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-INIT_SCRIPT="$SCRIPT_DIR/init.sh"
+PLUGIN_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+INIT_SCRIPT="$PLUGIN_ROOT/skills/init/scripts/init.sh"
 TEST_DIR="$(mktemp -d)"
 PASS=0
 FAIL=0

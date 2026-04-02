@@ -1,15 +1,20 @@
 #!/bin/bash
 # init.sh - Initialize Core Nexus plugin
 # Usage: bash init.sh [plugin_root_dir]
-#   plugin_root_dir: Root directory of the plugin (default: script's grandparent dir)
+#   plugin_root_dir: Root directory of the plugin (default: auto-detect from script location)
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-PLUGIN_ROOT="${1:-$(cd "$SCRIPT_DIR/../.." && pwd)}"
+PLUGIN_ROOT="${1:-$(cd "$SCRIPT_DIR/../../.." && pwd)}"
 
 SKILLS_DIR="$PLUGIN_ROOT/skills"
 AVAILABLE_DIR="$PLUGIN_ROOT/available"
+
+if [ ! -d "$AVAILABLE_DIR" ]; then
+  echo "Error: available/ directory not found: $AVAILABLE_DIR" >&2
+  exit 1
+fi
 
 # Directories to skip during copy
 SKIP_DIRS=("optional")

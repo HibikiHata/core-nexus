@@ -1,10 +1,9 @@
 {
   "name": "core-nexus",
-  "description": "Personal productivity plugin management for Claude Code",
+  "description": "Personal productivity plugin for Claude Code — adaptive skills that learn your preferences",
   "version": "0.1.0",
   "author": {
-    "name": "Hibiki Hata",
-    "email": "your-email@example.com"
+    "name": "Hibiki Hata"
   },
   "license": "MIT",
   "repository": "https://github.com/HibikiHata/core-nexus",

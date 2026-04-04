@@ -1,12 +1,17 @@
 {
   "name": "core-nexus",
-  "description": "Personal productivity plugin management for Claude Code",
-  "version": "0.1.0",
+  "description": "Personal productivity plugin for Claude Code — adaptive skills that learn your preferences",
+  "version": "0.2.0",
   "author": {
-    "name": "Hibiki Hata",
-    "email": "your-email@example.com"
+    "name": "Hibiki Hata"
   },
   "license": "MIT",
   "repository": "https://github.com/HibikiHata/core-nexus",
-  "keywords": ["productivity", "skills", "multi-language", "personal", "workflow"]
+  "keywords": ["productivity", "skills", "multi-language", "personal", "workflow"],
+  "userConfig": {
+    "language": {
+      "description": "Preferred language for skills (ja/en/es)",
+      "sensitive": false
+    }
+  }
 }

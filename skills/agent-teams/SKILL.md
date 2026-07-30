@@ -8,6 +8,8 @@ user-invocable: false
 
 Conventions for coordinating multiple subagents spawned via the Agent tool. In the current harness there is one implicit team per session: spawn teammates with the Agent tool (giving each a `name`), continue them with SendMessage, and let them run in the background by default.
 
+> **Scope:** these are conventions for subagents spawned with the Agent tool, which work in any session. They are NOT the experimental built-in agent-teams feature (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`, off by default), which adds a shared task list and an agent panel. When that feature is enabled, use its task list for coordination and this whiteboard for findings. If the harness exposes task-based tools instead of an `Agent` tool, adapt the tool names — the conventions still apply.
+
 ## When to Parallelize
 
 > **Default: parallelize when there is room to.** If any part of the work can proceed independently, split it.
@@ -22,6 +24,7 @@ Conventions for coordinating multiple subagents spawned via the Agent tool. In t
 **Stay with a single agent (exceptions):**
 - Strictly order-dependent tasks (each step needs the previous result)
 - Unavoidable concurrent edits to the same file
+- Small tasks a single agent finishes in a few minutes — team coordination overhead exceeds the benefit
 
 > Decision rule: **"Is there at least one parallelizable part?"** If yes, use a team.
 
@@ -66,8 +69,17 @@ Teammates do NOT inherit the leader's conversation history. CLAUDE.md, MCP serve
 - **Tool**: Agent tool with a `name` (e.g. `reviewer-a`) so the teammate is addressable via SendMessage
 - **Type**: use a matching workflow agent when one exists; otherwise `subagent_type: "general-purpose"`
 - **Model**: omit `model` to inherit the leader's model; override only deliberately (e.g. `sonnet` for lightweight mechanical tasks)
-- **Permissions**: pass `mode: "dontAsk"` — allow-listed tools run without prompts; anything else is **silently skipped** instead of blocking the run. Two mandatory mitigations: (1) pre-approve the tools the tasks will need before spawning, and (2) require skipped-call reporting in every spawn prompt (below) — a skipped call produces an empty result that can masquerade as a finding ("nothing found" vs "could not look")
+- **Permissions**: teammates inherit the leader's permission mode; per-teammate modes cannot be set at spawn (the Agent tool's `mode` input is deprecated and ignored). Pre-approve the tools the tasks will need before spawning — teammate permission prompts surface in the leader's session and stall the run until answered. Additionally, require skipped-call reporting in every spawn prompt (below): a denied or skipped call produces an empty result that can masquerade as a finding ("nothing found" vs "could not look")
+- **No user prompts**: a background teammate has no AskUserQuestion tool. Instruct teammates to SendMessage the leader with their question and pause, rather than guessing
 - **Background**: agents run in the background by default and their final message returns to the leader automatically on completion
+
+**Mandatory element in every spawn prompt** (include verbatim, adjusting only the teammate name — do not drop it when paraphrasing the example):
+
+```
+End your report with a "skipped tool calls" list: every tool call that was
+denied or skipped during your work, or "none". A missing list is treated as
+a degraded result.
+```
 
 Example spawn prompt (replace `{whiteboard_path}` and every other placeholder with real values before sending — never send literal placeholders):
 
@@ -90,7 +102,7 @@ The leader creates a whiteboard immediately after kickoff, recording the mission
 
 | Item | Rule |
 |------|------|
-| Location | under `docs/agent-teams/whiteboards/` (version-controlled; adjust to the project's document conventions) |
+| Location | under `docs/agent-teams/whiteboards/` (version-controlled). If the project has no `docs/` convention, use `.claude/agent-teams/whiteboards/` instead — and always tell the user where team files were written |
 | File name | `yyyyMMdd-whiteboard-<topic>.md` (e.g. `20260710-whiteboard-keyword-search-investigation.md`) |
 | Template | [references/whiteboard-template.md](references/whiteboard-template.md) |
 | Role | the team's single source of truth |
@@ -115,7 +127,7 @@ After all investigation completes, the leader writes the result report.
 
 | Item | Rule |
 |------|------|
-| Location | under `docs/agent-teams/results/` (version-controlled; adjust to the project's document conventions) |
+| Location | under `docs/agent-teams/results/` (version-controlled; same fallback as the whiteboard: `.claude/agent-teams/results/` when the project has no `docs/`) |
 | File name | `yyyyMMdd-result-<topic>.md` |
 | Template | [references/result-template.md](references/result-template.md) |
 | Author | the leader, after all work completes |

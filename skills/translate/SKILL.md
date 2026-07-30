@@ -1,27 +1,34 @@
 ---
 name: translate
-description: This skill should be used when the user asks to "translate skills to another language", "add a new language to core-nexus", "create skills in my language", or "localize core-nexus skills".
+description: Localizes the trigger descriptions of installed core-nexus skills into another language, so they auto-trigger on phrasings in that language. English stays the canonical default.
+disable-model-invocation: true
+argument-hint: "[language]"
 ---
 
-## 概要
+# Localize Skill Triggers (translate)
 
-`available/` 配下の既存言語スキルを基に、新しい言語版を生成する。
+Rewrites the `description` frontmatter of this plugin's skills so they also trigger on phrasings in the user's language. Skill bodies stay in English; only trigger descriptions are localized.
 
-## 手順
+## On Invocation
 
-1. `ls available/` で既存の言語ディレクトリを確認する
-2. ユーザーにソース言語（翻訳元）とターゲット言語（翻訳先）を確認する
-3. ソース言語のスキルを順番に読み、ターゲット言語に翻訳する:
-   - SKILL.md の `description` は英語のまま維持する（トリガー精度のため）
-   - SKILL.md の body 部分を翻訳する
-   - スキル名（ディレクトリ名）は変更しない
-4. `available/{target_lang}/` に翻訳したスキルを配置する
-5. `optional/` ディレクトリがソース言語にある場合、同様に翻訳する
-6. 完了後、翻訳したスキル一覧を報告する
-7. `/core-nexus:init` の実行を案内する
+If `$ARGUMENTS` is provided, treat it as the target language. Otherwise ask the user which language to localize into.
 
-## 注意事項
+## Workflow
 
-- description は英語で記述する（Claude のスキル検出は英語 description が最も精度が高い）
-- 技術用語（コマンド名、パス、ツール名）は翻訳しない
-- 既存の翻訳がある場合は上書き前にユーザーに確認する
+1. List this plugin's skills: read every `${CLAUDE_PLUGIN_ROOT}/skills/*/SKILL.md` (skip this skill itself)
+2. For each skill:
+   - Keep the existing English description unchanged as the canonical base
+   - Append natural trigger phrasings in the target language — the phrases a native speaker would actually type when asking for this, quoted (e.g. for Japanese on agent-teams: 「エージェントチームで手分けして」「サブエージェントで並列に」)
+   - Do not translate any other frontmatter field or the body
+3. Show the user a before/after comparison of every description and get approval
+4. Apply the edits
+
+## Constraints
+
+- Edit only the `description` field. Never change `name`, other frontmatter fields, or the body
+- Appended phrases must be realistic user phrasings in that language, not literal translations of the English description
+- Keep each description under ~1024 characters
+
+## After a Plugin Update
+
+Plugin updates overwrite these local edits. Re-run `/core-nexus:translate [language]` after updating the plugin to restore the localization.

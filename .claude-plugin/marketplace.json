@@ -1,0 +1,14 @@
+{
+  "name": "core-nexus-plugins",
+  "description": "Marketplace for the core-nexus plugin — parallel agent teams, skill authoring, and grouped semantic commits.",
+  "owner": {
+    "name": "Hibiki Hata"
+  },
+  "plugins": [
+    {
+      "name": "core-nexus",
+      "source": "./",
+      "strict": false
+    }
+  ]
+}

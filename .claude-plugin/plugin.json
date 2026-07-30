@@ -1,11 +1,12 @@
 {
   "name": "core-nexus",
-  "description": "Personal productivity plugin for Claude Code — adaptive skills that learn your preferences",
-  "version": "0.1.0",
+  "description": "Run parallel subagent teams that don't step on each other, author skills to best-practice spec, and make clean grouped semantic commits.",
+  "version": "0.3.0",
   "author": {
     "name": "Hibiki Hata"
   },
-  "license": "MIT",
+  "homepage": "https://github.com/HibikiHata/core-nexus",
   "repository": "https://github.com/HibikiHata/core-nexus",
-  "keywords": ["productivity", "skills", "multi-language", "personal", "workflow"]
+  "license": "MIT",
+  "keywords": ["agent-teams", "subagents", "skill-authoring", "semantic-commit", "workflow"]
 }

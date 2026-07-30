@@ -1,6 +1,6 @@
 # core-nexus
 
-Run parallel subagent teams that don't step on each other, author skills to best-practice spec, and make clean grouped semantic commits.
+Practical skills for everyday work with Claude Code — agent teams, skill authoring, semantic commits, and more.
 
 ## Install
 
@@ -17,12 +17,12 @@ Then restart Claude Code so the skills are discovered.
 
 | Skill | What it does |
 |---|---|
-| **agent-teams** | Conventions for running a parallel team of subagents — when parallelizing actually pays, whiteboard coordination, spawn context, result files, and inter-agent messaging. Includes whiteboard and result templates. |
-| **skill-create** | Interactively authors a new `SKILL.md` following current best practices — frontmatter, triggering description, progressive disclosure. Invoke with `/core-nexus:skill-create`. |
-| **smart-commit** | Analyzes uncommitted changes, groups them by nature, and creates one semantic commit per group. Never pushes. Invoke with `/core-nexus:smart-commit`. |
-| **translate** | Localizes the trigger descriptions of the skills above into your language, so they auto-trigger on phrasings you'd actually type. Invoke with `/core-nexus:translate [language]`. |
+| **agent-teams** | Conventions for running a parallel team of subagents — when parallelizing actually pays, whiteboard coordination, spawn context, result files, and inter-agent messaging. Includes whiteboard and result templates. Note: teams write their coordination files into your repo (`docs/agent-teams/`, or `.claude/agent-teams/` when no `docs/` exists) |
+| **skill-create** | Interactively authors a new `SKILL.md` following current best practices — frontmatter decisions, triggering description, progressive disclosure. Invoke with `/core-nexus:skill-create`. |
+| **smart-commit** | Analyzes uncommitted changes, groups them by nature, and creates one semantic commit per group. Never pushes (`git push` is excluded from its allowed tools). Invoke with `/core-nexus:smart-commit`. |
+| **localize-triggers** | Adds trigger phrasings in your language to this plugin's auto-invocable skills (via `when_to_use`), so they fire on requests you'd actually type. Invoke with `/core-nexus:localize-triggers [language]`. Re-run after plugin updates. |
 
-`agent-teams` loads automatically when your request matches its description — phrasings like "run this as a parallel subagent team". Descriptions ship in English; run `/core-nexus:translate` once to make them trigger in your language too. The other skills are explicit commands because they create files and commits.
+`agent-teams` loads automatically when your request matches its description — phrasings like "run this as a parallel subagent team". The other skills are explicit commands, so they never fire unexpectedly.
 
 ## Usage
 
@@ -35,9 +35,6 @@ Then restart Claude Code so the skills are discovered.
 
 > /core-nexus:smart-commit
   (groups your working tree into feat/fix/docs/chore commits — no push)
-
-> /core-nexus:translate Japanese
-  (skills now also trigger on e.g. 「エージェントチームで手分けして」)
 ```
 
 ## Why agent-teams
@@ -48,7 +45,7 @@ It was written from running such teams, not from theory.
 
 ## Requirements
 
-- [Claude Code](https://claude.com/claude-code)
+- [Claude Code](https://claude.com/claude-code) (recent version recommended — the skills rely on current frontmatter fields such as `when_to_use` and `allowed-tools`)
 
 ## License
 

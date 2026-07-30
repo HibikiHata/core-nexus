@@ -1,7 +1,7 @@
 {
   "name": "core-nexus",
-  "description": "Run parallel subagent teams that don't step on each other, author skills to best-practice spec, and make clean grouped semantic commits.",
-  "version": "0.3.0",
+  "description": "Practical skills for everyday work with Claude Code — agent teams, skill authoring, semantic commits, and more.",
+  "version": "0.4.0",
   "author": {
     "name": "Hibiki Hata"
   },
